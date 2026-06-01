@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Tailored Strength — Contract</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2ee;color:#1a1a1a;min-height:100vh;}
+
+.top-bar{background:#0d0d0d;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;position:sticky;top:0;z-index:100;}
+.top-bar .brand .sub{font-size:11px;opacity:0.65;margin-bottom:2px;letter-spacing:0.06em;text-transform:uppercase;}
+.top-bar .brand h1{font-size:16px;font-weight:700;letter-spacing:0.03em;}
+.top-bar .logo{height:52px;width:auto;display:block;flex-shrink:0;}
+@media(max-width:500px){
+  .top-bar .logo{height:42px;}
+  .top-bar .brand h1{font-size:14px;}
+}
+
+.panel{padding:18px 14px 60px;max-width:680px;margin:0 auto;}
+
+.card{background:#fff;border-radius:14px;border:1px solid #e5e5de;padding:18px;margin-bottom:16px;}
+.sec-title{font-size:11px;font-weight:800;color:#0d0d0d;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #d32f2f;}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.row2{grid-template-columns:1fr;}}
+
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:4px;}
+.field>span{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.07em;}
+.field input[type=text],.field input[type=number],.field input[type=date]{font-size:16px;border:1.5px solid #ddd;border-radius:10px;padding:12px 14px;background:#fafaf8;color:#1a1a1a;width:100%;-webkit-appearance:none;appearance:none;}
+.field input:focus{outline:none;border-color:#0d0d0d;background:#fff;}
+
+/* ---- PACKAGE OPTIONS ---- */
+.pkg-group{margin-bottom:6px;}
+.pkg-group-title{font-size:11px;font-weight:800;color:#888;text-transform:uppercase;letter-spacing:0.08em;margin:14px 0 10px;}
+
+.pkg-radio{display:none;}
+
+.pkg-label{
+  display:flex;align-items:center;gap:14px;
+  padding:15px 16px;border:2px solid #e5e5de;border-radius:12px;
+  cursor:pointer;margin-bottom:9px;background:#fafaf8;
+  transition:border-color 0.15s,background 0.15s;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  user-select:none;-webkit-user-select:none;
+}
+.pkg-radio:checked + .pkg-label{border-color:#0d0d0d;background:#f5ecec;}
+
+.pkg-dot{
+  width:26px;height:26px;border-radius:50%;border:2px solid #bbb;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:transparent;transition:all 0.15s;background:#fff;
+}
+.pkg-radio:checked + .pkg-label .pkg-dot{background:#0d0d0d;border-color:#0d0d0d;color:#d32f2f;}
+.pkg-text{font-size:15px;font-weight:500;color:#1a1a1a;}
+.pkg-radio:checked + .pkg-label .pkg-text{font-weight:700;color:#0d0d0d;}
+
+/* ---- PAYMENT METHOD ---- */
+.pay-radio{display:none;}
+.pay-pill{
+  display:inline-block;padding:12px 20px;border:2px solid #ddd;border-radius:30px;
+  font-size:15px;font-weight:500;cursor:pointer;color:#555;background:#fafaf8;
+  transition:all 0.15s;margin-bottom:8px;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  user-select:none;-webkit-user-select:none;
+}
+.pay-radio:checked + .pay-pill{border-color:#0d0d0d;background:#0d0d0d;color:#fff;font-weight:700;}
+
+#pay-cc:checked ~ #ccFields{display:block;}
+#ccFields{display:none;margin-top:14px;}
+
+.cc-type-radio{display:none;}
+.cc-pill{
+  display:inline-block;padding:10px 18px;border:2px solid #ddd;border-radius:30px;
+  font-size:14px;cursor:pointer;color:#555;background:#fafaf8;margin-right:8px;margin-bottom:8px;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  user-select:none;-webkit-user-select:none;
+}
+.cc-type-radio:checked + .cc-pill{border-color:#0d0d0d;background:#0d0d0d;color:#fff;font-weight:700;}
+
+/* ---- AGREE CHECKBOXES ---- */
+.agree-check{display:none;}
+.agree-label{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border:2px solid #ccc;border-radius:10px;
+  cursor:pointer;background:#fff;font-size:15px;font-weight:600;color:#555;
+  width:100%;transition:all 0.15s;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  user-select:none;-webkit-user-select:none;
+}
+.agree-check:checked + .agree-label{border-color:#2a7a2a;background:#f0faf0;color:#2a7a2a;}
+.agree-icon{
+  width:28px;height:28px;border-radius:50%;border:2px solid #ccc;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:16px;background:#fff;transition:all 0.15s;
+}
+.agree-check:checked + .agree-label .agree-icon{background:#2a7a2a;border-color:#2a7a2a;color:#fff;}
+.agree-check:checked + .agree-label .agree-txt::after{content:' ✓';}
+
+/* ---- CLAUSES ---- */
+.clause{background:#f8f8f4;border-radius:10px;padding:16px;margin-bottom:12px;border-left:4px solid #d32f2f;}
+.clause p{font-size:14px;color:#444;line-height:1.7;margin-bottom:14px;}
+
+/* ---- SIGNATURE ---- */
+.sig-label-row{font-size:11px;font-weight:800;color:#555;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.clear-btn{font-size:13px;color:#888;background:none;border:1px solid #ddd;border-radius:6px;cursor:pointer;padding:5px 12px;}
+canvas.sig{border:1.5px solid #ddd;border-radius:10px;background:#fff;display:block;width:100%;height:90px;touch-action:none;}
+
+/* ---- BUTTONS ---- */
+.btn-primary{display:block;width:100%;padding:17px;background:#0d0d0d;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:0.04em;margin-bottom:10px;-webkit-appearance:none;}
+.btn-secondary{display:block;width:100%;padding:16px;background:#fff;color:#0d0d0d;border:2px solid #0d0d0d;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;-webkit-appearance:none;}
+
+.final-note{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.6;margin-bottom:18px;text-align:center;padding:16px;background:#f8f8f4;border-radius:10px;border:2px solid #d32f2f;}
+
+.rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+@media(max-width:500px){.rate-grid{grid-template-columns:1fr;}}
+
+#ptRateSection{display:none;}
+
+@media print{
+  .btn-primary,.btn-secondary,.clear-btn{display:none!important;}
+  .top-bar{position:static;background:#0d0d0d!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .panel{padding:0!important;}
+  body{background:#fff;}
+  .card{border:none;padding:6px 0;margin-bottom:8px;border-radius:0;}
+  .clause{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand">
+    <div class="sub">Tailored Strength</div>
+    <h1>Personal Training Contract</h1>
+  </div>
+  <img class="logo" src="logo-dark.jpeg" alt="Tailored Strength">
+</div>
+
+<div class="panel">
+
+  <div class="card">
+    <div class="sec-title">Client Info</div>
+    <div style="margin-bottom:12px"><div class="field"><span>Date</span><input type="date" id="date1"></div></div>
+    <div class="row2">
+      <div class="field"><span>Client Name</span><input type="text" placeholder="Full name"></div>
+      <div class="field"><span>Trainer Name</span><input type="text" placeholder="Trainer name"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Select Package</div>
+    <div style="font-size:12px;color:#777;margin-bottom:10px;line-height:1.5;">Pick one option from each category, or just one. Totals update automatically.</div>
+
+    <div class="pkg-group-title">Semi-Private Training</div>
+
+    <input class="pkg-radio" type="checkbox" name="pkg-semi" id="pkg1" value="242" onchange="onPkgChange(this)">
+    <label class="pkg-label" for="pkg1"><span class="pkg-dot">✓</span><span class="pkg-text">4 Sessions/Month — $242/mo</span></label>
+
+    <input class="pkg-radio" type="checkbox" name="pkg-semi" id="pkg2" value="330" onchange="onPkgChange(this)">
+    <label class="pkg-label" for="pkg2"><span class="pkg-dot">✓</span><span class="pkg-text">6 Sessions/Month — $330/mo</span></label>
+
+    <input class="pkg-radio" type="checkbox" name="pkg-semi" id="pkg3" value="396" onchange="onPkgChange(this)">
+    <label class="pkg-label" for="pkg3"><span class="pkg-dot">✓</span><span class="pkg-text">8 Sessions/Month — $396/mo</span></label>
+
+    <input class="pkg-radio" type="checkbox" name="pkg-semi" id="pkg4" value="528" onchange="onPkgChange(this)">
+    <label class="pkg-label" for="pkg4"><span class="pkg-dot">✓</span><span class="pkg-text">12 Sessions/Month — $528/mo</span></label>
+
+    <input class="pkg-radio" type="checkbox" name="pkg-semi" id="pkg5" value="650" onchange="onPkgChange(this)">
+    <label class="pkg-label" for="pkg5"><span class="pkg-dot">✓</span><span class="pkg-text">10-Pack — $650</span></label>
+
+    <div class="pkg-group-title" style="margin-top:18px">Personal Training</div>
+
+    <input class="pkg-radio" type="checkbox" name="pkg-pt" id="pkg6" value="pt10" onchange="onPkgChange(this)">
+    <label class="pkg-label" for="pkg6"><span class="pkg-dot">✓</span><span class="pkg-text">10-Pack — $1,250</span></label>
+
+    <input class="pkg-radio" type="checkbox" name="pkg-pt" id="pkg7" value="pt20" onchange="onPkgChange(this)">
+    <label class="pkg-label" for="pkg7"><span class="pkg-dot">✓</span><span class="pkg-text">20-Pack — $2,400</span></label>
+
+    <div id="ptRateSection">
+      <div class="rate-grid">
+        <div class="field"><span>Rate Per Session ($)</span><input type="number" id="ratePerSession" placeholder="0.00" inputmode="decimal" oninput="calcTotal()"></div>
+        <div class="field"><span>PT Package Total ($)</span><input type="number" id="totalPkg" placeholder="0.00" readonly="" style="background:#f0f0ea"></div>
+      </div>
+    </div>
+
+    <div class="row2" style="margin-top:16px">
+      <div class="field"><span>Total Amount Owed ($)</span><input type="number" id="totalOwed" placeholder="0.00" inputmode="decimal"></div>
+      <div class="field"><span>Amount Owed Today ($)</span><input type="number" id="amountToday" placeholder="0.00" inputmode="decimal"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Payment Method</div>
+    <input class="pay-radio" type="radio" name="pay" id="pay-cash">
+    <label class="pay-pill" for="pay-cash">💵 Cash</label>
+
+    <input class="pay-radio" type="radio" name="pay" id="pay-check">
+    <label class="pay-pill" for="pay-check">📝 Check</label>
+
+    <input class="pay-radio" type="radio" name="pay" id="pay-cc">
+    <label class="pay-pill" for="pay-cc">💳 Credit Card</label>
+
+    <div id="ccFields">
+      <div style="margin-bottom:12px">
+        <div style="font-size:11px;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;">Card Type</div>
+        <input class="cc-type-radio" type="radio" name="cctype" id="cc-visa">
+        <label class="cc-pill" for="cc-visa">Visa</label>
+        <input class="cc-type-radio" type="radio" name="cctype" id="cc-mc">
+        <label class="cc-pill" for="cc-mc">Mastercard</label>
+        <input class="cc-type-radio" type="radio" name="cctype" id="cc-amex">
+        <label class="cc-pill" for="cc-amex">Amex</label>
+      </div>
+      <div class="row2" style="margin-bottom:10px">
+        <div class="field"><span>Name on Card</span><input type="text" placeholder="As on card"></div>
+        <div class="field"><span>Billing Zip</span><input type="text" placeholder="00000" maxlength="10" inputmode="numeric"></div>
+      </div>
+      <div class="field" style="margin-bottom:10px"><span>Card Number</span><input type="text" placeholder="•••• •••• •••• ••••" maxlength="19" inputmode="numeric" oninput="fmtCard(this)"></div>
+      <div class="row2">
+        <div class="field"><span>Exp. Date</span><input type="text" placeholder="MM/YY" maxlength="5" inputmode="numeric" oninput="fmtExp(this)"></div>
+        <div class="field"><span>CVV</span><input type="text" placeholder="•••" maxlength="4" inputmode="numeric"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Training Package Terms</div>
+
+    <div class="clause">
+      <p>Personal Training packages are valid for one year. Any sessions not used in this time frame will be forfeited. Package price is billed via cash, check or credit card. Payment must be received before training begins. Appointments can be scheduled up to one month in advance only.</p>
+      <p>Semi-Private Training memberships at any level requires a 4-month commitment; you will be charged the monthly amount. At the time of your fourth payment, you may cancel the contract or re-up for another four months. If you wish to cancel your contract, you must contact Tailored Strength to do so, otherwise the charge will automatically occur each month. Once you have used all your monthly allotment of sessions, any additional classes you wish to attend must be purchased at the drop-in rate. Unused sessions expire at the end of each month.</p>
+      <input class="agree-check" type="checkbox" id="ag1">
+      <label class="agree-label" for="ag1"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+
+    <div class="clause">
+      <p>I understand that all Personal and Semi-Private training rates are based on set timed sessions and should I arrive late, there is no guarantee I will receive the full session with my trainer. In return, if my Personal Trainer is late for a session, I will still receive the full session time or an additional free session.</p>
+      <input class="agree-check" type="checkbox" id="ag2">
+      <label class="agree-label" for="ag2"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+
+    <div class="clause">
+      <p>I understand that Tailored Strength bills its Personal and Semi-Private Training clients on a pre-pay basis. Once my trainer and I have decided upon the type of training package and payment plan I will purchase, payment must be made before the sessions are conducted. I understand that all Personal and Semi-Private Training sessions are non-refundable.</p>
+      <input class="agree-check" type="checkbox" id="ag3">
+      <label class="agree-label" for="ag3"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Cancellations</div>
+    <div class="clause">
+      <p>Personal and Semi-Private Training clients are allowed <strong>2 excused cancellations</strong> (due to illness, business, etc.) per package. To have a cancelled appointment considered excused, you must notify your Personal Trainer at least <strong>twenty-four (24) hours in advance</strong> of the scheduled workout. Each excused cancellation may be rescheduled for an alternate date and time within the same calendar month agreeable to both client and trainer. Tailored Strength recommends that all cancelled sessions be rescheduled to ensure consistency and fitness progress.</p>
+      <input class="agree-check" type="checkbox" id="ag4">
+      <label class="agree-label" for="ag4"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+    <div class="clause">
+      <p>A canceled appointment will be considered <strong>unexcused</strong> when you do not show up for a scheduled training session or when you fail to meet the <strong>twenty-four (24) hour advanced notice</strong> condition. You will forfeit all unexcused cancellations. Tailored Strength recommends that all cancelled sessions be rescheduled to ensure consistency and fitness progress.</p>
+      <input class="agree-check" type="checkbox" id="ag5">
+      <label class="agree-label" for="ag5"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Refunds &amp; Expiration</div>
+    <div class="clause">
+      <p>No refunds or credits for payments made or applied to Personal and Semi-Private Training packages will be issued. The sessions are nontransferable. If the trainer has to cancel due to illness or emergency, the session will be made up at the client's earliest convenience.</p>
+      <input class="agree-check" type="checkbox" id="ag6">
+      <label class="agree-label" for="ag6"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-title">Terms &amp; Conditions</div>
+    <div class="clause">
+      <p>I understand that during a personal training session, my trainer may have to use Touch Training to correct alignment and/or to focus my concentration on a particular muscle area to be targeted. If I feel uncomfortable or experience any type of discomfort with Touch Training, I will immediately request that my trainer discontinue using this technique.</p>
+      <input class="agree-check" type="checkbox" id="ag7">
+      <label class="agree-label" for="ag7"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+    <div class="clause">
+      <p>I understand that during a Personal or Semi-Private training session, my trainer, other staff of Tailored Strength or hired photographers may take photos or video of me. I authorize Tailored Strength to use my image for use in marketing, social media, online content, or printed materials. I waive any right to inspect or approve use of finished photography or other content, and I waive any right to royalties or compensation arising from or related to the use of the image.</p>
+      <input class="agree-check" type="checkbox" id="ag8">
+      <label class="agree-label" for="ag8"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+    <div class="clause">
+      <p>I understand that the usage of any nutritional supplements is done under my own will and has not been prescribed by my Personal Trainer.</p>
+      <input class="agree-check" type="checkbox" id="ag9">
+      <label class="agree-label" for="ag9"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+    <div class="clause">
+      <p>I understand and agree to these terms for any subsequent Personal or Semi-Private training sessions and/or packages I purchase at Tailored Strength.</p>
+      <input class="agree-check" type="checkbox" id="ag10">
+      <label class="agree-label" for="ag10"><span class="agree-icon">✓</span><span class="agree-txt">I have read and agree</span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="final-note">I have read and understand the above contract, and by my signature below, agree to all terms and conditions herein.</div>
+
+    <div class="field" style="margin-bottom:16px"><span>Printed Client Name</span><input type="text" placeholder="Full legal name"></div>
+
+    <div style="margin-bottom:20px">
+      <div class="sig-label-row">Client Signature <button class="clear-btn" onclick="clearSig('clientSig')">Clear</button></div>
+      <canvas class="sig" id="clientSig"></canvas>
+      <div class="field" style="margin-top:10px;max-width:180px"><span>Date</span><input type="date"></div>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <div class="sig-label-row">Trainer Signature <button class="clear-btn" onclick="clearSig('trainerSig')">Clear</button></div>
+      <canvas class="sig" id="trainerSig"></canvas>
+      <div class="field" style="margin-top:10px;max-width:180px"><span>Date</span><input type="date"></div>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+  <button class="btn-secondary" onclick="resetForm()">+ New Client (Reset Form)</button>
+  <div style="height:40px"></div>
+</div>
+
+<script>
+const today = new Date().toISOString().slice(0,10);
+document.getElementById('date1').value = today;
+
+function onPkgChange(cb){
+  const group = cb.name;
+  document.querySelectorAll('input[name="'+group+'"]').forEach(i=>{ if(i!==cb) i.checked=false; });
+
+  if(group === 'pkg-pt'){
+    if(cb.checked){
+      document.getElementById('ratePerSession').value = cb.value==='pt10' ? 125 : 120;
+    } else {
+      document.getElementById('ratePerSession').value = '';
+    }
+  }
+  recalc();
+}
+
+function recalc(){
+  const semi = document.querySelector('input[name="pkg-semi"]:checked');
+  const pt   = document.querySelector('input[name="pkg-pt"]:checked');
+
+  const semiTotal = semi ? parseFloat(semi.value) : 0;
+
+  let ptTotal = 0;
+  const ptSection = document.getElementById('ptRateSection');
+  if(pt){
+    ptSection.style.display = 'grid';
+    const sessions = pt.value==='pt10' ? 10 : 20;
+    const rps = parseFloat(document.getElementById('ratePerSession').value) || 0;
+    ptTotal = rps * sessions;
+    document.getElementById('totalPkg').value = ptTotal ? ptTotal.toFixed(2) : '';
+  } else {
+    ptSection.style.display = 'none';
+    document.getElementById('totalPkg').value = '';
+  }
+
+  const total = semiTotal + ptTotal;
+  document.getElementById('totalOwed').value   = total ? total.toFixed(2) : '';
+  document.getElementById('amountToday').value = total ? total.toFixed(2) : '';
+}
+
+function calcTotal(){ recalc(); }
+
+function fmtCard(i){let v=i.value.replace(/\D/g,'').slice(0,16);i.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function fmtExp(i){let v=i.value.replace(/\D/g,'').slice(0,4);if(v.length>2)v=v.slice(0,2)+'/'+v.slice(2);i.value=v;}
+
+function clearSig(id){const c=document.getElementById(id);c.getContext('2d').clearRect(0,0,c.width,c.height);}
+
+function initSig(id){
+  const canvas=document.getElementById(id);
+  const ctx=canvas.getContext('2d');
+  let drawing=false;
+  function resize(){
+    const r=canvas.getBoundingClientRect();
+    if(r.width===0) return;
+    const dpr=window.devicePixelRatio||1;
+    const prev = canvas.width>0 ? canvas.toDataURL() : null;
+    canvas.width=r.width*dpr;canvas.height=r.height*dpr;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr,dpr);
+    ctx.strokeStyle='#0d0d0d';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';
+    if(prev){
+      const img=new Image();
+      img.onload=()=>ctx.drawImage(img,0,0,r.width,r.height);
+      img.src=prev;
+    }
+  }
+  requestAnimationFrame(resize);
+  window.addEventListener('load', resize);
+  window.addEventListener('resize', resize);
+  window.addEventListener('orientationchange', resize);
+
+  function pos(e){const r=canvas.getBoundingClientRect();const s=e.touches?e.touches[0]:e;return{x:s.clientX-r.left,y:s.clientY-r.top};}
+  canvas.addEventListener('mousedown',e=>{drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  canvas.addEventListener('mousemove',e=>{if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  canvas.addEventListener('mouseup',()=>drawing=false);
+  canvas.addEventListener('mouseleave',()=>drawing=false);
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+  canvas.addEventListener('touchend',()=>drawing=false);
+}
+initSig('clientSig');initSig('trainerSig');
+
+function resetForm(){
+  if(!confirm('Clear the form for a new client?'))return;
+  document.querySelectorAll('input[type=text],input[type=number]').forEach(i=>i.value='');
+  document.querySelectorAll('input[type=date]').forEach(i=>i.value='');
+  document.getElementById('date1').value=today;
+  document.querySelectorAll('input[type=radio],input[type=checkbox]').forEach(i=>i.checked=false);
+  document.getElementById('ptRateSection').style.display='none';
+  clearSig('clientSig');clearSig('trainerSig');
+  window.scrollTo(0,0);
+}
+</script>
+
+</body></html>
